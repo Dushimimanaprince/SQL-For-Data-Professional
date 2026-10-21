@@ -1,13 +1,25 @@
 -- 1. Function to deduct stock and log inventory changes
 CREATE OR REPLACE FUNCTION process_order_update_stock()
 RETURNS TRIGGER AS $$
+DECLARE
+    current_stock INT;
 BEGIN
-    -- Deduct the correct quantity from stock[cite: 2]
+
+    SELECT stock_quantity INTO current_stock 
+    FROM Products 
+    WHERE product_id = NEW.product_id;
+
+
+    IF current_stock < NEW.quantity THEN
+        RAISE EXCEPTION 'Transaction Failed: Insufficient stock. You requested %, but only % are available.', NEW.quantity, current_stock;
+    END IF;
+
+
     UPDATE Products 
     SET stock_quantity = stock_quantity - NEW.quantity
     WHERE product_id = NEW.product_id;
 
-    -- Record the change in the inventory log table[cite: 2]
+
     INSERT INTO InventoryLogs (product_id, change_amount, change_reason, log_date)
     VALUES (NEW.product_id, -NEW.quantity, 'Automated: Order Placed', CURRENT_TIMESTAMP);
 
