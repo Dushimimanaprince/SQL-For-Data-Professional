@@ -485,4 +485,4 @@ Software Engineering Student
 
 ---
 
-*Built as part of the AmaliTech Data Engineering Apprenticeship Programme: SQL for Professionals.*
+*Debugging: being the detective in a crime movie where you are also the murderer. 🕵️*
