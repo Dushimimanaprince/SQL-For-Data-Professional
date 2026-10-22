@@ -10,7 +10,7 @@ JOIN Orders o ON c.customer_id = o.customer_id
 JOIN OrderDetails od ON o.order_id = od.order_id
 GROUP BY c.name, o.order_id, o.order_date, o.total_amount;
 
--- 2. View displaying products that are low on stock[cite: 2]
+-- 2. View displaying products that are low on stock
 CREATE OR REPLACE VIEW vw_low_stock_alerts AS
 SELECT 
     product_id,
@@ -18,4 +18,13 @@ SELECT
     stock_quantity,
     reorder_level
 FROM Products
-WHERE stock_quantity <= reorder_level;
+WHERE stock_quantity < reorder_level;
+
+-- 5. Using the views
+SELECT * FROM vw_order_summaries;
+SELECT * FROM vw_low_stock_alerts;
+SELECT * FROM vw_customer_spending;
+
+-- 6. Checking the query plan
+EXPLAIN ANALYZE
+SELECT * FROM Orders WHERE customer_id = 1;
