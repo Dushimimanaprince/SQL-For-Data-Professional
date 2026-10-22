@@ -20,6 +20,18 @@ SELECT
 FROM Products
 WHERE stock_quantity < reorder_level;
 
+-- 3. View showing customer spending and tier
+CREATE OR REPLACE VIEW vw_customer_spending AS
+SELECT
+    c.customer_id,
+    c.name AS customer_name,
+    COUNT(o.order_id) AS number_of_orders,
+    COALESCE(SUM(o.total_amount), 0) AS total_spent,
+    c.tier AS customer_tier
+FROM Customers c
+LEFT JOIN Orders o ON o.customer_id = c.customer_id
+GROUP BY c.customer_id, c.name, c.tier;
+
 -- 5. Using the views
 SELECT * FROM vw_order_summaries;
 SELECT * FROM vw_low_stock_alerts;
