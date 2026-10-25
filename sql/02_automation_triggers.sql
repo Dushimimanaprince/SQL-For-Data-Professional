@@ -62,7 +62,6 @@ FOR EACH ROW
 EXECUTE FUNCTION process_order_update_stock();
 
 -- 3. Function to automate total amount calculation for each order
-DROP TRIGGER IF EXISTS trg_update_order_total ON OrderDetails;
 CREATE OR REPLACE FUNCTION update_order_total()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -76,6 +75,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- 4. Trigger to fire the total amount function after an order detail is added
+DROP TRIGGER IF EXISTS trg_update_order_total ON OrderDetails;
 CREATE TRIGGER trg_update_order_total
 AFTER INSERT ON OrderDetails
 FOR EACH ROW
